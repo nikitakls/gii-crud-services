@@ -5,7 +5,7 @@ use yii\helpers\StringHelper;
  */
 
 /* @var $this yii\web\View */
-/* @var $generator nikitakls\gii\servicecrud\Generator */
+/* @var $generator nikitakls\gii\scrud\Generator */
 /* @var $tableName string full table name */
 /* @var $className string class name */
 /* @var $queryClassName string query class name */

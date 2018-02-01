@@ -1,35 +1,17 @@
 <?php
-/**
- * @link http://www.yiiframework.com/
- * @copyright Copyright (c) 2008 Yii Software LLC
- * @license http://www.yiiframework.com/license/
- */
-
-namespace nikitakls\gii\servicecrud;
+namespace nikitakls\gii\scrud;
 
 use Yii;
 use yii\base\NotSupportedException;
+use yii\db\ActiveRecord;
 use yii\db\Schema;
 use yii\gii\CodeFile;
 
 /**
- * Generates CRUD
- *
- * @property array $columnNames Model column names. This property is read-only.
- * @property string $controllerID The controller ID (without the module ID prefix). This property is
- * read-only.
- * @property string $nameAttribute This property is read-only.
- * @property array $searchAttributes Searchable attributes. This property is read-only.
- * @property bool|\yii\db\TableSchema $tableSchema This property is read-only.
- * @property string $viewPath The controller view path. This property is read-only.
- *
- * @author Qiang Xue <qiang.xue@gmail.com>
- * @since 2.0
+ * Generates SCRUD
  */
 class Generator extends \yii\gii\generators\crud\Generator
 {
-    public $modelClass;
-
     public $serviceClass;
     public $formCreateClass;
     public $formEditClass;
@@ -125,26 +107,6 @@ class Generator extends \yii\gii\generators\crud\Generator
     }
 
     /**
-     * Generates the properties for the specified table.
-     * @param \yii\db\TableSchema $table the table schema
-     * @return array the generated properties (property => type)
-     * @since 2.0.6
-     */
-    public function getProperties()
-    {
-        $properties = [];
-        foreach ($this->getColumnNames() as $column) {
-            $properties[$column] = [
-                'type' => 'integer',
-                'name' => $column,
-                'comment' => $column,
-            ];
-        }
-
-        return $properties;
-    }
-
-    /**
      * @return Connection the DB connection as specified by [[db]].
      */
     protected function getDbConnection()
@@ -228,7 +190,6 @@ class Generator extends \yii\gii\generators\crud\Generator
 
     /**
      * Generates validation rules for the specified table.
-     * @param \yii\db\TableSchema $table the table schema
      * @return array the generated validation rules
      */
     public function generateRules()
@@ -339,6 +300,24 @@ class Generator extends \yii\gii\generators\crud\Generator
             return false;
         }
         return isset($table->columns[$column]) && $table->columns[$column]->isPrimaryKey;
+    }
+
+    /**
+     * @return null|ActiveRecord
+     */
+    public function getModel(){
+        if(empty($this->modelClass)){
+            return null;
+        }
+        return (new $this->modelClass());
+    }
+
+    /** @return array */
+    public function getModelAttributes(){
+        if(empty($this->modelClass)){
+            return [];
+        }
+        return $this->getModel()->getAttributes();
     }
 
 }
