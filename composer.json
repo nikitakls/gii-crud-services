@@ -1,0 +1,21 @@
+{
+    "name": "nikitakls/yii2-gii-scrud",
+    "description": "Gii generator with service layer architecture",
+    "type": "yii2-extension",
+    "keywords": ["yii2","gii","crud","services"],
+    "license": "BSD-3-Clause",
+    "authors": [
+        {
+            "name": "nikitakls",
+            "email": "niktiakls@yandex.ru"
+        }
+    ],
+    "require": {
+        "yiisoft/yii2": "*"
+    },
+    "autoload": {
+        "psr-4": {
+            "nikitakls\\gii\\scrud\\": "src"
+        }
+    }
+}
