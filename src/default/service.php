@@ -36,7 +36,7 @@ class <?= StringHelper::basename($generator->serviceClass) ?>
         return $model;
     }
 
-    public function remove($id): void
+    public function remove($id)
     {
         $model = $this->repo->get($id);
         $this->repo->remove($model);

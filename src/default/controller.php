@@ -58,7 +58,7 @@ class <?= $controllerClass ?> extends <?= StringHelper::basename($generator->bas
     {
         return [
             'verbs' => [
-                'class' => VerbFilter::className(),
+                'class' => VerbFilter::class,
                 'actions' => [
                     'delete' => ['POST'],
                 ],
@@ -130,9 +130,10 @@ class <?= $controllerClass ?> extends <?= StringHelper::basename($generator->bas
         if ($form->load(Yii::$app->request->post()) && $form->validate()) {
             try {
                 $model = $this-><?= $serviceNameVar?>->create($form, Yii::$app->user->id);
-                Yii::$app->session->setFlash('success', 'You puzzle saved successfully.');
+                Yii::$app->session->setFlash('success', '<?= StringHelper::basename($generator->modelClass) ?> saved successfully.');
                 return $this->redirect(['view', 'id' => $model->id]);
             } catch (\DomainException $e) {
+                Yii::$app->errorHandler->logException($e);
                 Yii::$app->session->setFlash('error', $e->getMessage());
             }
         }
@@ -183,6 +184,8 @@ class <?= $controllerClass ?> extends <?= StringHelper::basename($generator->bas
     {
         try {
             $this-><?= $serviceNameVar?>->remove(<?= $actionParams ?>);
+            Yii::$app->session->setFlash('success', '<?= StringHelper::basename($generator->modelClass) ?> deleted.');
+
         } catch (\DomainException $e) {
             Yii::$app->errorHandler->logException($e);
             Yii::$app->session->setFlash('error', $e->getMessage());

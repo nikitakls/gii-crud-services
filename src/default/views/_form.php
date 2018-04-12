@@ -20,7 +20,7 @@ use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 
 /* @var $this yii\web\View */
-/* @var $model <?= ltrim($generator->modelClass, '\\') ?> */
+/* @var $model <?= ltrim($generator->formCreateClass, '\\') ?> */
 /* @var $form yii\widgets\ActiveForm */
 ?>
 

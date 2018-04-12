@@ -89,8 +89,8 @@ class <?= StringHelper::basename($generator->repositoryClass) ?>
      */
 
     public function save(<?= StringHelper::basename($generator->modelClass) ?> $model,
-                         bool $runValidation = true,
-                         array $attributeNames = null)
+                         $runValidation = true,
+                         $attributeNames = null)
     {
         if (!$model->save($runValidation, $attributeNames)) {
             throw new \RuntimeException('Saving <?= StringHelper::basename($generator->modelClass) ?> error.');
