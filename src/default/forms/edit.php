@@ -19,7 +19,7 @@ echo "<?php\n";
 $rules = $generator->generateRules();
 ?>
 
-namespace <?= StringHelper::dirname(ltrim($generator->formCreateClass, '\\')) ?>;
+namespace <?= StringHelper::dirname(ltrim($generator->formEditClass, '\\')) ?>;
 
 use Yii;
 use yii\base\Model;
@@ -47,19 +47,23 @@ class <?= StringHelper::basename($generator->formEditClass) ?> extends Model
     /** @var <?= StringHelper::basename($generator->modelClass) ?> */
     protected $_model;
 
-
-    public function __construct(<?= StringHelper::basename($generator->modelClass) ?> $model, $config = [])
+	/**
+	 * <?= StringHelper::basename($generator->formEditClass) ?> constructor.
+	 * @param <?= StringHelper::basename($generator->modelClass) ?>|null $model
+	 * @param array $config
+	 */
+    public function __construct(?<?= StringHelper::basename($generator->modelClass) ?> $model = null, $config = [])
     {
-    <?php foreach ($generator->generateProperties() as $name => $attr): ?>
-    $this-><?= $name ?> = $model-><?= $name ?>;
-    <?php endforeach; ?>
-
-        $this->_model = $model;
-
+				if(!is_null($model)){
+					<?php foreach ($generator->generateProperties() as $name => $attr): ?>
+	$this-><?= $name ?> = $model-><?= $name ?>;
+					<?php endforeach; ?>
+	$this->_model = $model;
+				}
         parent::__construct($config);
     }
 
-    /*
+    /**
      * @inheritdoc
      */
     public function rules()
@@ -74,7 +78,7 @@ class <?= StringHelper::basename($generator->formEditClass) ?> extends Model
     {
         return [
     <?php foreach ($generator->generateSearchLabels() as $name => $label): ?>
-            <?= "'$label' => " . $generator->generateString($label) . ",\n" ?>
+            <?= "'$name' => " . $generator->generateString($label) . ",\n" ?>
     <?php endforeach; ?>
         ];
     }

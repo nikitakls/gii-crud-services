@@ -6,12 +6,18 @@ echo "<?php\n";
 ?>
 namespace <?= StringHelper::dirname(ltrim($generator->repositoryClass, '\\')) ?>;
 
+use Yii;
 use <?= ($generator->modelClass) ?>;
 use yii\web\NotFoundHttpException;
 
+/**
+* <?= StringHelper::basename($generator->repositoryClass) ?> implements the store operations for <?= StringHelper::basename($generator->modelClass) ?> model.
+*/
 class <?= StringHelper::basename($generator->repositoryClass) ?>
-
 {
+    /**
+     * @var <?= StringHelper::basename($generator->modelClass) ?>[]
+     */
     protected $_cache = [];
 
     /**
@@ -27,9 +33,10 @@ class <?= StringHelper::basename($generator->repositoryClass) ?>
     }
 
     /**
-     * get <?= StringHelper::basename($generator->modelClass) ?> by pk
+     * Get <?= StringHelper::basename($generator->modelClass) ?> by pk
      * @param integer $id task
      * @param bool $canCache can take model from cache
+     * @param string $pk
      * @throws NotFoundHttpException
      * @return <?= StringHelper::basename($generator->modelClass . PHP_EOL) ?>
      */
@@ -51,25 +58,30 @@ class <?= StringHelper::basename($generator->repositoryClass) ?>
     protected function getBy($condition)
     {
         if (!$model = <?= StringHelper::basename($generator->modelClass) ?>::find()->andWhere($condition)->limit(1)->one()) {
-            throw new NotFoundHttpException('<?= StringHelper::basename($generator->modelClass) ?> not found.');
+            throw new NotFoundHttpException(<?= $generator->generateString(StringHelper::basename($generator->modelClass).' not found.') ?>);
         }
         return $model;
     }
 
     /**
-     * Remove the current model in storage.
+     * Remove the current <?= StringHelper::basename($generator->modelClass) ?> in storage.
      *
-     * @throws \RuntimeException
      * @param <?= StringHelper::basename($generator->modelClass) ?> $model
      * meaning all attributes that are loaded from DB will be saved.
+     * @throws \Throwable
+     * @throws \RuntimeException
+     * @throws \yii\db\StaleObjectException
      */
-
     public function remove(<?= StringHelper::basename($generator->modelClass) ?> $model)
     {
         if (!$model->delete()) {
-            throw new \RuntimeException('Deleting error.');
+            throw new \RuntimeException(<?= $generator->generateString('Deleting error.') ?>);
         }
     }
+
+    /**
+     * Clear all model from cache.
+     */
 
     public function clearCache()
     {
@@ -77,7 +89,7 @@ class <?= StringHelper::basename($generator->repositoryClass) ?>
     }
 
     /**
-     * Saves the current model in storage.
+     * Saves the current <?= StringHelper::basename($generator->modelClass) ?> in storage.
      *
      * @throws \RuntimeException
      * @param <?= StringHelper::basename($generator->modelClass) ?> $model
@@ -88,13 +100,13 @@ class <?= StringHelper::basename($generator->repositoryClass) ?>
      * meaning all attributes that are loaded from DB will be saved.
      */
 
-    public function save(<?= StringHelper::basename($generator->modelClass) ?> $model,
-                         $runValidation = true,
-                         $attributeNames = null)
+    public function save(<?= StringHelper::basename($generator->modelClass) ?> $model, $runValidation = true, $attributeNames = null)
     {
-        if (!$model->save($runValidation, $attributeNames)) {
-            throw new \RuntimeException('Saving <?= StringHelper::basename($generator->modelClass) ?> error.');
-        }
+			if (!$model->save($runValidation, $attributeNames)) {
+				if ($model->hasErrors()) {
+					throw new \RuntimeException(implode(' ', $model->getErrorSummary(false)));
+				}
+				throw new \RuntimeException(<?= $generator->generateString('Saving '. StringHelper::basename($generator->modelClass) .' error.') ?>);
+			}
     }
-
 }

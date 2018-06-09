@@ -45,7 +45,7 @@ class Generator extends \yii\gii\generators\crud\Generator
     {
         return array_merge(parent::rules(), [
             [['controllerClass', 'modelClass', 'searchModelClass', 'baseControllerClass'], 'filter', 'filter' => 'trim'],
-            [['serviceClass', 'formCreateClass', 'formEditClass', 'repositoryClass'], 'required'],
+            [['serviceClass', 'formEditClass', 'repositoryClass'], 'required'],
             ['viewPath', 'safe'],
         ]);
     }
@@ -58,7 +58,7 @@ class Generator extends \yii\gii\generators\crud\Generator
         return array_merge(parent::attributeLabels(), [
             'serviceClass' => 'Service Class',
             'formCreateClass' => 'Form for create model',
-            'formEditClass' => 'Form for update model',
+            'formEditClass' => 'Form for model',
             'repositoryClass' => 'Repository class',
         ]);
     }
@@ -90,8 +90,8 @@ class Generator extends \yii\gii\generators\crud\Generator
             }
         }
 
-        $createForm = Yii::getAlias('@' . str_replace('\\', '/', ltrim($this->formCreateClass, '\\') . '.php'));
-        $files[] = new CodeFile($createForm, $this->render('forms/create.php'));
+        //$createForm = Yii::getAlias('@' . str_replace('\\', '/', ltrim($this->formCreateClass, '\\') . '.php'));
+        //$files[] = new CodeFile($createForm, $this->render('forms/create.php'));
 
         $editForm = Yii::getAlias('@' . str_replace('\\', '/', ltrim($this->formEditClass, '\\') . '.php'));
         $files[] = new CodeFile($editForm, $this->render('forms/edit.php'));
@@ -272,7 +272,7 @@ class Generator extends \yii\gii\generators\crud\Generator
         }
 
         // Exist rules for foreign keys
-        foreach ($table->foreignKeys as $refs) {
+        /*foreach ($table->foreignKeys as $refs) {
             $refTable = $refs[0];
             $refTableSchema = $db->getTableSchema($refTable);
             if ($refTableSchema === null) {
@@ -288,7 +288,7 @@ class Generator extends \yii\gii\generators\crud\Generator
             }
             $targetAttributes = implode(', ', $targetAttributes);
             $rules[] = "[['$attributes'], 'exist', 'skipOnError' => true, 'targetClass' => $refClassName::class, 'targetAttribute' => [$targetAttributes]]";
-        }
+        }*/
 
         return $rules;
     }

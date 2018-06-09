@@ -40,7 +40,6 @@ use yii\data\ActiveDataProvider;
 <?php endif; ?>
 use <?= ($generator->repositoryClass) ?>;
 use <?= ($generator->serviceClass) ?>;
-use <?= ($generator->formCreateClass) ?>;
 use <?= ($generator->formEditClass) ?>;
 use <?= ltrim($generator->baseControllerClass, '\\') ?>;
 use yii\web\NotFoundHttpException;
@@ -125,12 +124,12 @@ class <?= $controllerClass ?> extends <?= StringHelper::basename($generator->bas
      */
     public function actionCreate()
     {
-        $form = new <?= StringHelper::basename($generator->formCreateClass) ?>();
+        $form = new <?= StringHelper::basename($generator->formEditClass) ?>();
 
         if ($form->load(Yii::$app->request->post()) && $form->validate()) {
             try {
                 $model = $this-><?= $serviceNameVar?>->create($form, Yii::$app->user->id);
-                Yii::$app->session->setFlash('success', '<?= StringHelper::basename($generator->modelClass) ?> saved successfully.');
+                Yii::$app->session->setFlash('success', <?= $generator->generateString( StringHelper::basename($generator->modelClass) .' saved successfully.') ?>);
                 return $this->redirect(['view', 'id' => $model->id]);
             } catch (\DomainException $e) {
                 Yii::$app->errorHandler->logException($e);
@@ -159,7 +158,7 @@ class <?= $controllerClass ?> extends <?= StringHelper::basename($generator->bas
 
             try {
                 $model = $this-><?= $serviceNameVar?>->edit($id, $form);
-                Yii::$app->session->setFlash('success', '<?= StringHelper::basename($generator->modelClass) ?> updated.');
+                Yii::$app->session->setFlash('success', <?= $generator->generateString( StringHelper::basename($generator->modelClass) .' updated.') ?>);
                 return $this->redirect(['view', 'id' => $model->id]);
             } catch (\DomainException $e) {
                 Yii::$app->errorHandler->logException($e);
@@ -178,13 +177,12 @@ class <?= $controllerClass ?> extends <?= StringHelper::basename($generator->bas
      * If deletion is successful, the browser will be redirected to the 'index' page.
      * <?= implode("\n     * ", $actionParamComments) . "\n" ?>
      * @return mixed
-     * @throws NotFoundHttpException if the model cannot be found
      */
     public function actionDelete(<?= $actionParams ?>)
     {
         try {
             $this-><?= $serviceNameVar?>->remove(<?= $actionParams ?>);
-            Yii::$app->session->setFlash('success', '<?= StringHelper::basename($generator->modelClass) ?> deleted.');
+            Yii::$app->session->setFlash('success', <?= $generator->generateString( StringHelper::basename($generator->modelClass) .' deleted.') ?>);
 
         } catch (\DomainException $e) {
             Yii::$app->errorHandler->logException($e);
